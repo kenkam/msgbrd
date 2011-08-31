@@ -42,7 +42,7 @@
           $("#loading img").hide();
         },
         success: function(data) {
-          if (data.msgs.length != 0) {
+          if (data.msgs != null) {
             for (var i=0; i<data.msgs.length; i++) {
               // clone a list item
               li = $("<li><span></span> <span></span></li>");
