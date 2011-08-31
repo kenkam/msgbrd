@@ -15,7 +15,7 @@ KEY_NUM = 'count'
 TIME_STORE_FORMAT = '%Y-%m-%d %H:%M'
 TIME_DISPLAY_FORMAT = '%d %b, %Y %H:%M'
 HOST = env['DOTCLOUD_DATA_REDIS_HOST']
-PORT = env['DOTCLOUD_DATA_REDIS_PORT']
+PORT = int(env['DOTCLOUD_DATA_REDIS_PORT'])
 PASSWORD = env['DOTCLOUD_DATA_REDIS_PASSWORD']
 
 # TODO: errors
@@ -26,8 +26,9 @@ r = redis.Redis(host=HOST, port=PORT, db=0, password=PASSWORD)
 try:
     if r.get(KEY_NUM) == None:
         r.set(KEY_NUM, 0)
-except:
+except Exception as e:
     sys.stderr.write("Cannot connect to redis server\n")
+    sys.stderr.write(e)
     sys.exit(1)
 
 def has_entries():
