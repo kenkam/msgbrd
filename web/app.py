@@ -84,7 +84,7 @@ def save_message(msg):
     r.set(m, msg)
     r.set(d, datetime.now().strftime(TIME_STORE_FORMAT))
     r.lpush('messages', n)
-    sys.stderr.write("Saved message {n}: {msg}".format(**locals()))
+    sys.stderr.write("Saved message {n}: {msg}\n".format(**locals()))
     return n
 
 @app.route('/')

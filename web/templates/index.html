@@ -42,7 +42,11 @@
           $("#loading img").hide();
         },
         success: function(data) {
-          if (data.msgs != null) {
+          if (data.msgs == null) {
+            noMore = 1;
+            p = $("<p>There's nothing here!</p>");
+            $("#loading").append(p);
+          } else if (data.msgs.length != 0) {
             for (var i=0; i<data.msgs.length; i++) {
               // clone a list item
               li = $("<li><span></span> <span></span></li>");
@@ -57,7 +61,6 @@
             }
             lock = 0;
           } else {
-            noMore = 1;
             p = $("<p>You got to the end, man!</p>");
             $("#loading").append(p);
           }
