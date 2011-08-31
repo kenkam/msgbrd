@@ -84,6 +84,7 @@ def save_message(msg):
     r.set(m, msg)
     r.set(d, datetime.now().strftime(TIME_STORE_FORMAT))
     r.lpush('messages', n)
+    sys.stdout.write("Saved message #%d: %s" % (n, message))
     return n
 
 @app.route('/')
@@ -113,13 +114,10 @@ def post():
         # make sure request is not empty
         m = request.form['text'].strip()
         if len(m) > 140 or m == "":
-            # message too long or empty message
-            pass
-        else:
-            save_message(request.form['text'])
-            return redirect('/')
-    # redirect back to html
-    return redirect('/' + error)
+            # redirect back to html
+            return redirect('/' + error)
+    save_message(request.form['text'])
+    return redirect('/')
     
 @app.route('/_post', methods=['POST'])
 def _post():
