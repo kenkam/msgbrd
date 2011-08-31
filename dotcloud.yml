@@ -1,0 +1,5 @@
+www:
+  type: python
+  approot: web
+data:
+  type: redis
