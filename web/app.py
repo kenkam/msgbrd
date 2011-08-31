@@ -21,7 +21,7 @@ PASSWORD = env['DOTCLOUD_DATA_REDIS_PASSWORD']
 # TODO: errors
 
 # setup redis
-r = redis.StrictRedis(host=HOST, port=PORT, db=0, password=PASSWORD)
+r = redis.Redis(host=HOST, port=PORT, db=0, password=PASSWORD)
 # check the count is there
 try:
     if r.get(KEY_NUM) == None:
