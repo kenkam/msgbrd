@@ -1,2 +1,0 @@
-flask > 0
-redis > 0
