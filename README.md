@@ -12,4 +12,4 @@ You'll need to have a redis server.
 python app.py
 ```
 
-This will start the server listening on port 5000, the default for Flask. For deployment, check out the [Flask docs](http://flask.pocoo.org/docs/deploying/).
+This will start the server listening on port 5000, the default for Flask. By default, it will try to connect to the Redis server on ``127.0.0.1:6379``. For more on deployment, check out the [Flask docs](http://flask.pocoo.org/docs/deploying/).
