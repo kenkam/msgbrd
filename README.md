@@ -1,6 +1,6 @@
 # README
 
-This project contains a message board that uses [Flask](http://flask.pocoo.org/) and [Redis](http://redis.io) server for storing the messages.
+Msgbrd is a simple a message board that uses [Flask](http://flask.pocoo.org/) and [Redis](http://redis.io) server for storing the messages.
 
 ## Quickstart
 
