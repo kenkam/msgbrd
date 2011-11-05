@@ -49,7 +49,7 @@
               // set its attribute
               li.attr('id', 'msg-'+data.msgs[i][0])
               // set its first span as the body
-              li.find("span:first").html(data.msgs[i][1]).urlize();
+              li.find("span:first").text(data.msgs[i][1]).urlize();
               // set second span as the date
               li.find("span:last").html(data.msgs[i][2] + " GMT");
               // append to the list
@@ -105,7 +105,7 @@
           // set its attribute
           li.attr('id', 'msg-'+data.id)
           // set its first span as the body
-          li.find("span:first").html(data.body).urlize();
+          li.find("span:first").text(data.body).urlize();
           // set second span as the date
           li.find("span:last").html(data.date + " GMT");
           // now prepend it, hide it first, then slide it down
@@ -131,7 +131,7 @@
 </head>
 <body>
   <section>
-    <h1>Redis on Flask</h1>
+    <h1>Msgbrd (Redis + Flask)</h1>
 
     <!-- Message -->
     <p>

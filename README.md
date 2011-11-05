@@ -1,6 +1,6 @@
 # README
 
-Msgbrd is a simple a message board that uses [Flask](http://flask.pocoo.org/) and [Redis](http://redis.io) server for storing the messages. [Demo](http://flask.kennethkam.com)
+Msgbrd is a simple a message board that uses [Flask](http://flask.pocoo.org/) and [Redis](http://redis.io) server for storing the messages. [Demo](http://msgbrd.kkam.in)
 
 ## Quickstart
 
