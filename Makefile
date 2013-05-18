@@ -1,14 +1,12 @@
 .PHONY: install
 
 SUPERVISORDIR=/etc/supervisor/conf.d
-NGINXDIR=/etc/nginx/sites-available
+NGINXDIR=/etc/nginx
 
 install:
 	ln -sf `pwd`/supervisor/msgbrd.conf $(SUPERVISOR)
 	supervisorctl reload
-	ln -sf `pwd`/nginx/msgbrd $(NGINXDIR)
+	cp -f ./nginx/msgbrd $(NGINXDIR)/sites-available
+	ln -sf $(NGINXDIR)/sites-available/msgbrd $(NGINXDIR)/sites-enabled/
 	service nginx restart
 
-env:
-	virtualenv --no-site-packages env
-	pip install -r requirements.txt --target env

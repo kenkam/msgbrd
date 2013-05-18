@@ -13,7 +13,7 @@ TIME_STORE_FORMAT = '%Y-%m-%d %H:%M'
 TIME_DISPLAY_FORMAT = '%d %b, %Y %H:%M'
 
 # setup redis
-r = redis.Redis(host=HOST, port=PORT, db=0)
+r = redis.Redis(host=HOST, port=PORT, db=1)
 # check the count is there
 try:
     if r.get(KEY_NUM) == None:
