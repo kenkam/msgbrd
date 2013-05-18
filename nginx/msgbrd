@@ -1,0 +1,16 @@
+upstream msgbrd {
+  server 127.0.0.1:10000;
+}
+
+server {
+  listen 80;
+  server_name msgbrd.kkam.in;
+  root /usr/share/nginx/www;
+  
+  location / {
+    include uwsgi_params;
+    uwsgi_pass msgbrd;
+    uwsgi_param UWSGI_PYHOME /home/kenneth/msgbrd/env;
+  }
+}
+
