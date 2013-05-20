@@ -1,0 +1,33 @@
+#!/usr/bin/env bash
+
+SUPERVISORDIR=/etc/supervisor/conf.d
+NGINXDIR=/etc/nginx
+
+if [ -z "$1" ]
+then
+	echo "Usage: `basename $0` [install|reload|flushdb]"
+        exit
+fi
+
+if [ "$(id -u)" != "0" ]
+then
+	echo "You must be sudo to run `basename $0`"
+	exit
+fi
+
+case "$1" in
+install)
+	ln -sf `pwd`/supervisor/msgbrd.conf $SUPERVISORDIR
+	cp -f ./nginx/msgbrd $NGINXDIR/sites-available
+	ln -sf $NGINXDIR/sites-available/msgbrd $NGINXDIR/sites-enabled/
+	supervisorctl reload
+	service nginx restart
+	;;	
+reload)
+	supervisorctl reload
+	;;
+flushdb)
+	redis-cli -n 1 flushdb
+	supervisorctl reload
+	;;
+esac
