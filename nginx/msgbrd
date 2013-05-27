@@ -1,17 +1,13 @@
 upstream msgbrd {
-  server 127.0.0.1:8081;
+  server unix:///tmp/msgbrd.sock;
 }
 
 server {
-  server_name msgbrd.kkam.in;
-  rewrite ^ https://msgbrd.kkam.in$request_uri permanent ;
-}
+  listen 80;
+  listen 443 ssl;
 
-server {
-  listen 443;
-  ssl on;
-  ssl_certificate /etc/ssl/certs/msgbrd.crt;
-  ssl_certificate_key /etc/ssl/private/msgbrd.key;
+  ssl_certificate /etc/ssl/certs/msgbrd.u.crt;
+  ssl_certificate_key /etc/ssl/private/msgbrd.key; 
 
   server_name msgbrd.kkam.in;
   root /usr/share/nginx/www;
