@@ -28,6 +28,6 @@ reload)
 	;;
 flushdb)
 	redis-cli -n 1 flushdb
-	supervisorctl reload
+	supervisorctl restart msgbrd-flask:
 	;;
 esac
