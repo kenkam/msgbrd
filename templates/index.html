@@ -13,7 +13,6 @@
   <!-- <script src="/static/jquery.urlize.js"></script>-->
   <script type='text/javascript'>  
   var noMore = 0;
-  var lock= 0;
   
   countChar = function() {
     $('#chars-left').html(140 - $("#textarea").val().length + '');
@@ -24,24 +23,25 @@
   scrollCallback = function() {
     // has it scrolled to the bottom? and is there more data?
     if ($(this).scrollTop() == $(this).height() - $(window).height() && 
-        noMore != 1 && lock != 1) {
+        noMore != 1) {
       // show a nice spinner
       $("#loading img").fadeIn('fast');
       // get the last id
       n = $("ul").find("li[id|='msg']").length 
-      // lock the ajax call so this cannot be called again until this one
-      // is finished
-      lock = 1;
       $.ajax({
         type: "GET",
         url: "/_get",
         data: "n=" + n,
         datatype: 'json',
+        error: function() {
+          console.log('error ajax');
+        },
         complete: function() {
           // stop the spinner
-          $("#loading img").hide();
+          $("#loading img").stop().hide();
         },
         success: function(data) {
+          console.log('got ' + data.msgs.length + ' messages');
           if (data.msgs != null && data.msgs.length != 0) {
             for (var i=0; i<data.msgs.length; i++) {
               // clone a list item
@@ -55,7 +55,6 @@
               // append to the list
               li.appendTo("ul");
             }
-            lock = 0;
           } else {
             noMore = 1;
             p = $("<p>You got to the end, man!</p>");
@@ -95,10 +94,19 @@
           // error has occured 
         },
         complete: function() {
-          // remove these restrictions when it's done
-          $("#button").removeAttr("disabled");
-          $("form>img").fadeOut('fast');
-          $("#textarea").focus();
+          $.ajax({
+            type: "GET",
+            url: "/_token",
+            datatype: "json",
+            success: function(data) {
+              console.log('got token ' + data.token);
+              $("#token").val(data.token);
+              // remove these restrictions when it's done
+              $("#button").removeAttr("disabled");
+              $("form>img").fadeOut('fast');
+              $("#textarea").focus();
+            }
+          })
         },
         success: function(data) {
           // are there any messages before?

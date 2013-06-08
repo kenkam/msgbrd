@@ -93,6 +93,7 @@ def set_key(uuid):
 def validate_key(uuid):
     key = 'token:%s' % uuid
     if r.get(key) == None:
+        print "Security token failed"
         raise Exception("No token for post")
     else:
         r.delete(key)
@@ -149,6 +150,12 @@ def _post():
                        body=msg[1],
                        date=msg[2])
     return redirect('/')
+
+@app.route('/_token', methods=['GET'])
+def _token():
+    token = uuid.uuid4()
+    set_key(token)
+    return jsonify(token=str(token))
 
 @app.route('/delete/<int:n>', methods=['GET'])
 def delete(n):
