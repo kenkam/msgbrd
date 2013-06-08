@@ -41,8 +41,8 @@
           $("#loading img").stop().hide();
         },
         success: function(data) {
-          console.log('got ' + data.msgs.length + ' messages');
           if (data.msgs != null && data.msgs.length != 0) {
+            console.log('got ' + data.msgs.length + ' messages');
             for (var i=0; i<data.msgs.length; i++) {
               // clone a list item
               li = $("<li><span></span> <span></span></li>");
