@@ -3,11 +3,13 @@ from datetime import datetime, timedelta
 import redis
 import signal
 import sys
+import uuid
 
 app = Flask(__name__)
 
 from settings import *
 # TODO: errors
+KEY_EXPIRE = 3600
 KEY_NUM = 'count'
 TIME_STORE_FORMAT = '%Y-%m-%d %H:%M'
 TIME_DISPLAY_FORMAT = '%d %b, %Y %H:%M'
@@ -65,10 +67,13 @@ def get_messages(start=0, end=9):
             msgs.append(get_message(n))
     return msgs
 
-def save_message(msg):
+def save_message(msg, token):
     """
     Saves the message into redis and returns the msg id
     """
+    # validate token
+    validate_key(token)
+    
     # increment
     r.incr(KEY_NUM)
     n = int(r.get(KEY_NUM))
@@ -80,6 +85,18 @@ def save_message(msg):
     r.lpush('messages', n)
     return n
 
+def set_key(uuid):
+    key = 'token:%s' % uuid
+    r.set(key, "")
+    r.expire(key, KEY_EXPIRE)
+    
+def validate_key(uuid):
+    key = 'token:%s' % uuid
+    if r.get(key) == None:
+        raise Exception("No token for post")
+    else:
+        r.delete(key)
+
 """
 Flask based routes
 """
@@ -88,7 +105,9 @@ def index():
     # get messages
     # in the format of (body, datetime)
     texts = get_messages()
-    return render_template('index.html', texts=texts)
+    token = uuid.uuid4()
+    set_key(token)
+    return render_template('index.html', texts=texts, token=token)
 
 @app.route('/_get')
 def _get():
@@ -105,18 +124,14 @@ def _get():
 
 @app.route('/post', methods=['POST'])
 def post():
-    error = ""
     if request.method == 'POST':
         # make sure request is not empty
         m = request.form['text'].strip()
         if len(m) > 140 or m == "":
-            # message too long or empty message
-            pass
-        else:
-            save_message(request.form['text'])
-            return redirect('/')
-    # redirect back to html
-    return redirect('/' + error)
+            abort(400)
+        save_message(request.form['text'], request.form['token'])
+        return redirect('/')
+    return redirect('/')
     
 @app.route('/_post', methods=['POST'])
 def _post():
@@ -128,11 +143,12 @@ def _post():
         m = request.form['text'].strip()
         if len(m) > 140 or m == "":
             abort(400)
-        n = save_message(request.form['text'])
+        n = save_message(request.form['text'], request.form['token'])
         msg = get_message(n)
         return jsonify(id=msg[0],
                        body=msg[1],
                        date=msg[2])
+    return redirect('/')
 
 @app.route('/delete/<int:n>', methods=['GET'])
 def delete(n):

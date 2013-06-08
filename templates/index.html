@@ -71,10 +71,16 @@
     $("#button").click(function(e) {
       // make sure the textarea is not empty or more than 140 chars long
       msg = $("#textarea").val().trim();
-      if ( msg == "" || msg.length > 140 ) {
+      if ( msg === "" || msg.length > 140 ) {
         $("#textarea").focus();
         return false;
       }
+      
+      token = $('#token').val();
+      if (token === "" ) {
+        return false;
+      }
+      
       // start of ajax call, disable the button
       $(this).attr("disabled", true);
       // show a nice spinner
@@ -83,7 +89,7 @@
       $.ajax({
         type: "POST",
         url: "/_post",
-        data: "text=" + msg,
+        data: "text=" + msg + "&token=" + token,
         datatype: 'json',
         error: function() {
           // error has occured 
@@ -142,6 +148,7 @@
     <form id="form" action="/post" method="post" class="clearfix">
       <textarea id="textarea" name="text" cols="50" rows="2"></textarea>
       <input type="submit" value="Submit" id="button" />
+      <input type="hidden" value="{{ token }}" id="token" name="token" />
       <p><span id="chars-left">140</span> characters remaining</p> 
       <img src="/static/spinner.gif" alt="Loading" />
     </form>
